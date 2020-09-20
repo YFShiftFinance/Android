@@ -1,0 +1,32 @@
+# Description: Ato tests.
+
+load(
+    "//build_extensions:android_library_instrumentation_tests.bzl",
+    "android_library_instrumentation_tests",
+)
+load(
+    "//build_extensions:test_devices.bzl",
+    "devices",
+)
+
+android_library_instrumentation_tests(
+    name = "unit_tests",
+    srcs = [
+        "AndroidTestOrchestratorTest.java",
+        "TestCoverageTest.java",
+        "TestRunnableTest.java",
+    ],
+    target_devices = devices(),
+    deps = [
+        "//core/java/androidx/test/core",
+        "//ext/junit",
+        "//runner/android_junit_runner",
+        "//runner/android_test_orchestrator",
+        "@maven//:junit_junit",
+        "@maven//:org_hamcrest_hamcrest_all",
+    ],
+)
+
+# omit tests for RuntimePermissionsIntegrationTest for now, since it requires
+# api >= 24
+# "RuntimePermissionsIntegrationTest.java",

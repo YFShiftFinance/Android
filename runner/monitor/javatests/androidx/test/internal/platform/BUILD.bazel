@@ -1,0 +1,10 @@
+android_library(
+    name = "fixtures",
+    srcs = [
+        "ServiceFixture.java",
+        "ServiceFixtureImpl.java",
+    ],
+    visibility = ["//visibility:public"],
+    deps = [
+    ],
+)

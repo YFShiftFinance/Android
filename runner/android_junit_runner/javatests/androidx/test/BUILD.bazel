@@ -1,0 +1,87 @@
+# Description: Tests for Runner
+
+load(
+    "//build_extensions:android_library_instrumentation_tests.bzl",
+    "android_library_instrumentation_tests",
+)
+load(
+    "//build_extensions:test_devices.bzl",
+    "devices",
+)
+
+package(
+    default_testonly = 1,
+)
+
+licenses(["notice"])  # Apache License 2.0
+
+android_library(
+    name = "legacy_test_manifest",
+    exports_manifest = 1,
+    manifest = "AndroidManifest.xml",
+)
+
+PARAMETERIZED_SRCS = [
+    "internal/runner/AndroidLogOnlyBuilderTest.java",
+    "internal/runner/TestLoaderTest.java",
+]
+
+# TODO(b/26110951) - remove when these classes are standalone parameterized tests
+android_library(
+    name = "parameterized",
+    srcs = PARAMETERIZED_SRCS,
+    deps = [
+        "//ext/junit",
+        "//runner/android_junit_runner",
+        "//runner/android_junit_runner/javatests/androidx/test/testing/fixtures",
+        "@maven//:junit_junit",
+        "@maven//:org_hamcrest_hamcrest_all",
+        "@maven//:org_mockito_mockito_core",
+    ],
+)
+
+android_library_instrumentation_tests(
+    name = "android_junit_runner_tests",
+    size = "large",
+    srcs = glob(
+        ["**/*.java"],
+        exclude = [
+            # suites not supported in Google3
+            "JUnitTestSuiteTest.java",
+            "MyTestSuiteBuilder.java",
+            # performance/profiling test
+            "JUnit3HogTest.java",
+            "JUnit4HogTest.java",
+            # empty tests not supported
+            "MyEmptyTest.java",
+            # parameterized tests not supported
+            "MyParameterizedTest.java",
+            # suppressed
+            "TheoriesAndTestsTogether.java",
+        ] + PARAMETERIZED_SRCS,
+    ),
+    args = [
+        "--test_filter_spec",
+        "-TEST_NAME",
+        "--test_package_names",
+        "androidx.test.testing",
+    ],
+    target_devices = devices(),
+    deps = [
+        "@androidsdk//:legacy_test-30",
+        ":legacy_test_manifest",
+        ":parameterized",
+        "//core",
+        "//ext/junit",
+        "//runner/android_junit_runner",
+        "//runner/android_junit_runner/javatests/androidx/test/testing/fixtures",
+        "//runner/rules",
+        "@maven//:com_google_truth_truth",
+        "@maven//:com_linkedin_dexmaker_dexmaker",
+        "@maven//:com_linkedin_dexmaker_dexmaker_mockito",
+        "@maven//:junit_junit",
+        "@maven//:org_hamcrest_hamcrest_all",
+        "@maven//:org_mockito_mockito_core",
+        "@maven//:org_objenesis_objenesis",
+    ],
+)

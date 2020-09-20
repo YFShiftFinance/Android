@@ -1,0 +1,18 @@
+load("@build_bazel_rules_android//android:rules.bzl", "android_library")
+
+package(
+    default_visibility = ["//services/storage:__subpackages__"],
+    features = ["-android_resources_strict_deps"],
+)
+
+licenses(["notice"])
+
+# Used by TestStorage to build URIs to the test file content providers.
+android_library(
+    name = "file",
+    srcs = glob(["*.java"]),
+    deps = [
+        "//runner/monitor",
+        "//services/storage/java/androidx/test/services/storage:test_storage_constants",
+    ],
+)

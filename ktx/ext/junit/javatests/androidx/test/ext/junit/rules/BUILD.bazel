@@ -1,0 +1,148 @@
+# Description: Tests for androidx.test.ext.junit.rules Kotlin extension
+
+load("@io_bazel_rules_kotlin//kotlin:kotlin.bzl", "kt_android_library")
+
+package(
+    default_testonly = 1,
+)
+
+licenses(["notice"])  # Apache License 2.0
+
+android_binary(
+    name = "target_stub",
+    manifest = "AndroidManifest_target.xml",
+    deps = [
+        "//core/javatests/androidx/test/core/app/testing",
+        "//core/javatests/androidx/test/core/app/testing:manifest",
+    ],
+)
+
+java_library(
+    name = "robolectric_config",
+    resources = ["robolectric.properties"],
+)
+
+kt_android_library(
+    name = "ActivityScenarioRuleKotlinTest_lib",
+    srcs = [
+        "ActivityScenarioRuleKotlinTest.kt",
+    ],
+    deps = [
+        "//:androidx_lifecycle_common",
+        "//core",
+        "//core/javatests/androidx/test/core/app/testing",
+        "//ext/junit",
+        "//ktx/core",
+        "//ktx/ext/junit",
+        "//runner/android_junit_runner",
+        "//runner/monitor",
+        "@maven//:com_google_guava_guava",
+        "@maven//:com_google_truth_truth",
+        "@maven//:junit_junit",
+    ],
+)
+
+android_local_test(
+    name = "ActivityScenarioRuleKotlinTest",
+    manifest = "AndroidManifest_target.xml",
+    deps = [
+        ":ActivityScenarioRuleKotlinTest_lib",
+        ":robolectric_config",
+        "//:androidx_lifecycle_common",
+        "//core",
+        "//core/javatests/androidx/test/core/app/testing",
+        "//core/javatests/androidx/test/core/app/testing:manifest",
+        "//ext/junit",
+        "//ktx/core",
+        "//ktx/ext/junit",
+        "//runner/monitor",
+        "@maven//:com_google_guava_guava",
+        "@maven//:com_google_truth_truth",
+        "@maven//:junit_junit",
+        "@maven//:org_robolectric_robolectric",
+        "@robolectric//bazel:android-all",
+    ],
+)
+
+android_binary(
+    name = "ActivityScenarioRuleKotlinTest_test_apk",
+    instruments = ":target_stub",
+    manifest = "AndroidManifest_test.xml",
+    deps = [
+        ":ActivityScenarioRuleKotlinTest_lib",
+        "//:androidx_lifecycle_common",
+        "//core",
+        "//core/javatests/androidx/test/core/app/testing",
+        "//ext/junit",
+        "//ktx/core",
+        "//ktx/ext/junit",
+        "//runner/android_junit_runner",
+        "//runner/monitor",
+        "@maven//:com_google_guava_guava",
+        "@maven//:com_google_truth_truth",
+        "@maven//:junit_junit",
+    ],
+)
+
+android_instrumentation_test(
+    name = "ActivityScenarioRuleKotlinTest_android",
+    args = [
+        "--clear_package_data",
+        "--install_test_services=True",  # required for Bazel 0.11, can be removed in 0.12
+    ],
+    target_device = "//tools/android/emulated_devices/generic_phone:android_23_x86",
+    test_app = ":ActivityScenarioRuleKotlinTest_test_apk",
+)
+
+kt_android_library(
+    name = "ActivityScenarioRuleWithCustomIntentKotlinTest_lib",
+    srcs = [
+        "ActivityScenarioRuleWithCustomIntentKotlinTest.kt",
+    ],
+    deps = [
+        "//:androidx_lifecycle_common",
+        "//core",
+        "//core/javatests/androidx/test/core/app/testing",
+        "//ext/junit",
+        "//ext/truth",
+        "//ktx/core",
+        "//ktx/ext/junit",
+        "//runner/android_junit_runner",
+        "//runner/monitor",
+        "@maven//:com_google_guava_guava",
+        "@maven//:com_google_truth_truth",
+        "@maven//:junit_junit",
+    ],
+)
+
+
+android_binary(
+    name = "ActivityScenarioRuleWithCustomIntentKotlinTest_test_apk",
+    instruments = ":target_stub",
+    manifest = "AndroidManifest_test.xml",
+    deps = [
+        ":ActivityScenarioRuleWithCustomIntentKotlinTest_lib",
+        "//:androidx_lifecycle_common",
+        "//core",
+        "//core/javatests/androidx/test/core/app/testing",
+        "//ext/junit",
+        "//ext/truth",
+        "//ktx/core",
+        "//ktx/ext/junit",
+        "//runner/android_junit_runner",
+        "//runner/monitor",
+        "@maven//:com_google_guava_guava",
+        "@maven//:com_google_truth_truth",
+        "@maven//:junit_junit",
+    ],
+)
+
+android_instrumentation_test(
+    name = "ActivityScenarioRuleWithCustomIntentKotlinTest_android",
+    args = [
+        "--clear_package_data",
+        "--install_test_services=True",  # required for Bazel 0.11, can be removed in 0.12
+    ],
+    target_device = "//tools/android/emulated_devices/generic_phone:android_23_x86",
+    test_app = ":ActivityScenarioRuleWithCustomIntentKotlinTest_test_apk",
+)

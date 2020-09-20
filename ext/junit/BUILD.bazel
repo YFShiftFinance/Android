@@ -1,0 +1,9 @@
+# Publicly visible junit extensions for Android
+
+licenses(["notice"])  # Apache License 2.0
+
+android_library(
+    name = "junit",
+    visibility = ["//visibility:public"],
+    exports = ["//ext/junit/java/androidx/test/ext/junit"],
+)
